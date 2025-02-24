@@ -5,6 +5,8 @@ include_once('model.php');
 include_once('test.php');
 
 $conn = get_connect();
+
+// Initialization database
 init_db($conn);
 
 // Uncomment to see data in db
@@ -36,14 +38,15 @@ $month_names = [
 </head>
 <body>
   <h1>User transactions information</h1>
-  <form action="data.php" method="get">
+  <form action="data.php" method="post">
     <label for="user">Select user:</label>
     <select name="user" id="user">
     <?php
-    $users = get_users($conn);
-    foreach ($users as $id => $name) {
-        echo "<option value=\"$id\">".$name."</option>";
-    }
+//        $users = get_users($conn);
+        $users = get_users_with_transactions($conn);
+        foreach ($users as $id => $name) {
+            echo "<option value=\"$id\">".$name."</option>";
+        }
     ?>
     </select>
     <input id="submit" type="submit" value="Show">

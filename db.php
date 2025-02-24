@@ -1,7 +1,11 @@
 <?php
 
 function get_connect() {
-    return new PDO("sqlite:.database.sqlite");
+    try {
+        return new PDO("sqlite:.database.sqlite");
+    } catch (PDOException $e) {
+        die($e->getMessage());
+    }
 }
 
 function init_db($conn) {
