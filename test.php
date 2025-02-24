@@ -26,6 +26,22 @@ function run_db_test($conn)
         $transactions[$row['id']] = $row['amount'];
     }
     print_r('Transactions data<br/>');
-    print_r($transactions);
+//    print_r($transactions);
+    var_dump($transactions);
+    print_r('</br>');
+
+//   evalution users with one or more transactions
+//    $statement = $conn->query('SELECT * FROM `users` where `users`.`id` IN (SELECT DISTINCT `user_accounts`.`user_id` FROM `user_accounts`
+//                                WHERE EXISTS (SELECT `transactions`.`id` FROM `transactions`
+//                                                         WHERE `transactions`.`account_from` = `user_accounts`.`id`
+//                                                            OR `transactions`.`account_to` = `user_accounts`.`id`) ');
+    $statement = $conn->query('SELECT * FROM `users` WHERE `users`.`id` in (SELECT `user_accounts`.`user_id` FROM `user_accounts`)');
+    $users_with_transactions = array();
+
+    while ($row = $statement->fetch()) {
+        $users_with_transactions[$row['id']] = $row['name'];
+    }
+    print_r('Users with one or more transactions:<br/>');
+    var_dump($users_with_transactions);
     print_r('</br>');
 }

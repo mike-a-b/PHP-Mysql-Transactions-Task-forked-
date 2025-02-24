@@ -5,14 +5,24 @@ include_once('model.php');
 include_once('test.php');
 
 $conn = get_connect();
+init_db($conn);
 
 // Uncomment to see data in db
-// run_db_test($conn);
+run_db_test($conn);
   
 $month_names = [
     '01' => 'January',
     '02' => 'Februarry',
-    '03' => 'March'
+    '03' => 'March',
+    '04' => 'April',
+    '05' => 'May',
+    '06' => 'June',
+    '07' => 'July',
+    '08' => 'August',
+    '09' => 'September',
+    '10' => 'October',
+    '11' => 'November',
+    '12' => 'December'
 ]
 ?>
     
