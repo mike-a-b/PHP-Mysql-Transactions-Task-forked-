@@ -8,10 +8,9 @@ $conn = get_connect();
 
 // Initialization database
 init_db($conn);
-
 // Uncomment to see data in db
 run_db_test($conn);
-  
+
 $month_names = [
     '01' => 'January',
     '02' => 'Februarry',
