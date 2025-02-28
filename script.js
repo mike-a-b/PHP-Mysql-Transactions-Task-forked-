@@ -13,8 +13,20 @@ submit_btn.onclick = function (e) {
       // ajax good , check state
       if (ajaxRequest.status == 200) {
         // get users transactions
-        //   JSON.parse(ajaxRequest.responseText)
-        console.log("ajax ok, response =" + ajaxRequest.responseText);
+        let balances = JSON.parse(ajaxRequest.responseText);
+        if(balances !== 0 ) {
+          balances.forEach(function (item, i, balances) {
+            let table_tr = document.createElement("tr");
+            let table_td1 = document.createElement("td");
+            let table_td2 = document.createElement("td");
+            table_td1.innerHTML = i;
+            table_td2.innerHTML = item;
+            table_tr.appendChild(table_td1);
+            table_tr.appendChild(table_td2);
+            data_table.appendChild(table_tr);
+          });
+          console.log("test response =" + JSON.parse(ajaxRequest.responseText));
+        }
       }
     }
   }
@@ -23,5 +35,5 @@ submit_btn.onclick = function (e) {
   ajaxRequest.open("POST", "data.php", true);
   console.log("user value: " + user.value);
   ajaxRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  ajaxRequest.send("user="+user.value);
+  ajaxRequest.send("user=" + user.value);
 }

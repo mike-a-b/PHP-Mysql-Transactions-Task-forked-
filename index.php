@@ -41,7 +41,6 @@ $month_names = [
     <label for="user">Select user:</label>
     <select name="user" id="user">
     <?php
-//        $users = get_users($conn);
         $users = get_users_with_transactions($conn);
         foreach ($users as $id => $name) {
             echo "<option value=\"$id\">".$name."</option>";
@@ -55,7 +54,7 @@ $month_names = [
       <h2>Transactions of `User name`</h2>
       <table>
           <tr><th>Mounth</th><th>Amount</th></tr>
-          <tr><td>...</td><td>...</td>
+          <tr><td>...</td><td>...</td></tr>
        </table>
   </div>  
 <script src="script.js"></script>
