@@ -39,6 +39,19 @@ function get_users_with_transactions($conn) {
 }
 
 /**
+ * @param $conn
+ * @param $id
+ * @return string
+ */
+function get_username_by_id($id, $conn) {
+    $statement = $conn->prepare('SELECT DISTINCT name FROM `users` WHERE `users`.`id` = :id');
+    $statement->bindParam(':id', (int)$id);
+    $statement->execute();
+    if($row = $statement->fetch(PDO::FETCH_ASSOC)){
+        return $row['name'];
+    }
+}
+/**
  * Return transactions balances of given user.
  * @param $user_id
  * @param $conn
@@ -46,27 +59,16 @@ function get_users_with_transactions($conn) {
  */
 function get_user_transactions_balances($user_id, $conn)
 {
+    // todo: response error in sql response e-> message
     $balance = array();
     try {
-//        $trans_to = $conn->prepare('
-//                SELECT id,
-//                       SUM(amount) AS sum_amount,
-//                       strftime("%m", trdate) AS tr_month
-//                FROM `transactions`
-//                WHERE :user_id = (SELECT `user_accounts`.id
-//                                FROM `user_accounts`
-//                                WHERE `user_accounts`.`id` = `transactions`.`account_to`)
-//                                        AND (`transactions`.`trdate` BETWEEN date("now","-1 year") AND date("now"))
-//                GROUP BY `transactions`.`id`
-//                /*ORDER BY tr_month ASC*/ ');
-        $trans_to = $conn->query('SELECT id,
-                                        SUM(amount) AS sum_amount,
+        $trans_to = $conn->query('SELECT SUM(amount) AS sum_amount,
                                          strftime("%m", trdate) AS tr_month 
                                 FROM `transactions` 
-                                WHERE (`transactions`.`account_to` = (SELECT `user_accounts`.`id` FROM `user_accounts`
-                                                                     WHERE `user_accounts`.`user_id` = :user_id))
-                                     AND (`transactions`.`trdate` BETWEEN date("now","-1 year") AND date("now"))
-                                GROUP BY `transactions`.`id`');
+                                WHERE `transactions`.`account_to` = (SELECT DISTINCT `user_accounts`.`id` FROM `user_accounts`
+                                                                     WHERE `user_accounts`.`user_id` = :user_id)
+                                     AND (`transactions`.`trdate` BETWEEN DATE("now", "-1 year") AND DATE("now"))
+                                GROUP BY tr_month');
         $trans_to->bindParam(':user_id', $user_id);
         if($trans_to->execute()) {
             while($row = $trans_to->fetch(PDO::FETCH_ASSOC)){
