@@ -8,6 +8,13 @@ function get_connect() {
     }
 }
 
+function get_connect_mysql() {
+    try {
+         return new PDO("mysql:host=localhost;dbname=balances", "root", "m1k31t");
+    } catch (PDOException $e) {
+        die($e->getMessage());
+    }
+}
 function init_db($conn) {
   $conn->exec("
     CREATE TABLE IF NOT EXISTS users (

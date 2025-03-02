@@ -1,7 +1,7 @@
 <?php
 include_once('db.php');
 include_once('model.php');
-$conn = get_connect();
+$conn = get_connect_mysql();
 $user_id = isset($_POST['user'])
     ? (int)$_POST['user']
     : null;

@@ -4,10 +4,11 @@ include_once('db.php');
 include_once('model.php');
 include_once('test.php');
 
-$conn = get_connect();
+//$conn = get_connect();
+$conn = get_connect_mysql();
 
 // Initialization database
-init_db($conn);
+// init_db($conn);
 // Uncomment to see data in db
 run_db_test($conn);
 
