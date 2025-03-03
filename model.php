@@ -60,21 +60,41 @@ function get_username_by_id($id, $conn) {
 function get_user_transactions_balances($user_id, $conn)
 {
     // todo: response error in sql response e-> message
-    $balance = array();
+    $balance_to = array();
+    $balance_from = array();
+    $difference = array();
     try {
-        $trans_to = $conn->query('SELECT SUM(amount) AS sum_amount,
-                                         strftime("%m", trdate) AS tr_month 
-                                FROM `transactions` 
-                                WHERE `transactions`.`account_to` = (SELECT DISTINCT `user_accounts`.`id` FROM `user_accounts`
-                                                                     WHERE `user_accounts`.`user_id` = :user_id)
-                                     AND (`transactions`.`trdate` BETWEEN DATE("now", "-1 year") AND DATE("now"))
-                                GROUP BY tr_month');
+        $trans_to = $conn->prepare('SELECT DATE_FORMAT(trdate, "%m") AS tr_month,
+                                            SUM(amount) AS sum_amount
+                                    FROM transactions
+                                    WHERE (transactions.account_to IN (SELECT id 
+                                                                       FROM user_accounts 
+                                                                       WHERE user_accounts.user_id = :user_id))
+                                    GROUP BY tr_month;');
         $trans_to->bindParam(':user_id', $user_id);
         if($trans_to->execute()) {
             while($row = $trans_to->fetch(PDO::FETCH_ASSOC)){
-                $balance[(int)$row['tr_month']] = $row['sum_amount'];
+
+                $balance_to[(int)$row['tr_month']] = $row['sum_amount'];
             }
-            return $balance;
+//            return $balance_to;
+        } else {
+            return null;
+        }
+        $trans_from = $conn->prepare('SELECT DATE_FORMAT(trdate, "%m") AS tr_month,
+                                            SUM(amount) AS sum_amount
+                                    FROM transactions
+                                    WHERE (transactions.account_from IN (SELECT id 
+                                                                       FROM user_accounts 
+                                                                       WHERE user_accounts.user_id = :user_id))
+                                    GROUP BY tr_month;');
+        $trans_from->bindParam(':user_id', $user_id);
+        if($trans_from->execute()) {
+            while($row = $trans_from->fetch(PDO::FETCH_ASSOC)){
+                $balance_from[(int)$row['tr_month']] = $row['sum_amount'];
+                $difference[(int)$row['tr_month']] = $balance_to[(int)$row['tr_month']] - $balance_from[(int)$row['tr_month']];
+            }
+            return $difference;
         } else {
             return null;
         }

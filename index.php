@@ -54,8 +54,10 @@ $month_names = [
   <div id="data">
       <h2>Transactions of `User name`</h2>
       <table>
-          <tr><th>Mounth</th><th>Amount</th></tr>
-          <tr><td>...</td><td>...</td></tr>
+          <tbody id="data_tbl">
+              <tr><th>Mounth</th><th>Amount</th></tr>
+              <tr><td>...</td><td>...</td></tr>
+          </tbody>
        </table>
   </div>  
 <script src="script.js"></script>
