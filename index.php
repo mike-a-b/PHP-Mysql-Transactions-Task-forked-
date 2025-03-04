@@ -3,7 +3,7 @@
 include_once('db.php');
 include_once('model.php');
 include_once('test.php');
-
+include_once('vendor/autoload.php');
 //$conn = get_connect();
 $conn = get_connect_mysql();
 

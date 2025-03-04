@@ -1,0 +1,17 @@
+{
+    "name": "acidburn/learn.local",
+    "autoload": {
+        "psr-4": {
+            "Acidburn\\LearnLocal\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mihail",
+            "email": "mike.acidburn@gmail.com"
+        }
+    ],
+    "require": {
+        "wixel/gump": "^2.2"
+    }
+}
